@@ -46,6 +46,20 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "article_id"))
     private List<Article> favoriteArticles;
 
+
+    @ManyToMany
+    @JoinTable(name= "favorite_recipes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    private List<Recipe> favorite_recipes;
+
+    @ManyToMany
+    @JoinTable(name= "Like_recipes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    private List<Recipe> like_recipes;
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Article> articles;
 
@@ -111,4 +125,21 @@ public class User {
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
+
+    public List<Recipe> getFavorite_recipes() {
+        return favorite_recipes;
+    }
+
+    public void setFavorite_recipes(List<Recipe> favorite_recipes) {
+        this.favorite_recipes = favorite_recipes;
+    }
+
+    public List<Recipe> getLike_recipes() {
+        return like_recipes;
+    }
+
+    public void setLike_recipes(List<Recipe> like_recipes) {
+        this.like_recipes = like_recipes;
+    }
+
 }
