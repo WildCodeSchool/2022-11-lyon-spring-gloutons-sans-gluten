@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,6 +39,16 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name= "favorite_articles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "article_id"))
+    private List<Article> favoriteArticles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Article> articles;
+
 
     public User() {
     }
@@ -86,5 +97,18 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Article> getFavoriteArticles() {
+        return favoriteArticles;
+    }
+    public void setFavoriteArticles(List<Article> favoriteArticles) {
+        this.favoriteArticles = favoriteArticles;
+    }
+    public List<Article> getArticles() {
+        return articles;
+    }
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
     }
 }
