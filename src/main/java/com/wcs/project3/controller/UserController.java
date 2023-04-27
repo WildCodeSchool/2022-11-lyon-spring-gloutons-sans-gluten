@@ -53,8 +53,7 @@ public class UserController {
         User userToUpdate = userRepository.findByUsername(username).get();
         userToUpdate.setUsername(user.getUsername());
         userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPassword(user.getPassword());
-        userRepository.updateById(userToUpdate.getId());
+        userRepository.save(userToUpdate);
         return true;
     }
 
