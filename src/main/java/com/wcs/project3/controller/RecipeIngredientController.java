@@ -18,6 +18,6 @@ public class RecipeIngredientController {
     RecipeIngredientRepository recipeIngredientRepository;
 
     @GetMapping("/quantity")
-    public List<RecipeIngredient> getAll(){return (List<RecipeIngredient>) recipeIngredientRepository.findAll();}
+    public List<RecipeIngredient> getAll(){return recipeIngredientRepository.findAll();}
 }
 

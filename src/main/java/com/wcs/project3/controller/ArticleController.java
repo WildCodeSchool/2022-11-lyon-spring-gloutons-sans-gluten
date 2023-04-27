@@ -16,7 +16,7 @@ public class ArticleController {
 
 
     @GetMapping("/articles")
-    public List<Article> getAll(){return(List<Article>) articleRepository.findAll();}
+    public List<Article> getAll(){return articleRepository.findAll();}
 
     @GetMapping("/articles/{id}")
     public Article getArticle(@PathVariable Long id){return articleRepository.findById(id).get();}

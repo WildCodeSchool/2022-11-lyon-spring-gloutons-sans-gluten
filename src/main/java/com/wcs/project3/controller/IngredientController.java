@@ -15,7 +15,7 @@ public class IngredientController {
     IngredientRepository ingredientRepository;
 
     @GetMapping("/ingredients")
-    public List<Ingredient> getAll(){return (List<Ingredient>) ingredientRepository.findAll();}
+    public List<Ingredient> getAll(){return ingredientRepository.findAll();}
 
     @GetMapping("/ingredients/{id}")
     public Ingredient getIngredient(@PathVariable Long id){return ingredientRepository.findById(id).get();}

@@ -18,7 +18,7 @@ public class StepController {
     RecipeRepository recipeRepository;
 
     @GetMapping("/steps")
-    public List<Step> getAll(){return(List<Step>) stepRepository.findAll();}
+    public List<Step> getAll(){return stepRepository.findAll();}
 
     @GetMapping("/steps/{id}")
     public Step getStep(@PathVariable Long id){return stepRepository.findById(id).get();}

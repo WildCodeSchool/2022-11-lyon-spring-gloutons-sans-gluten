@@ -15,7 +15,7 @@ public class CategoryController {
     @Autowired
     CategoryRepository categoryRepository;
     @GetMapping("/categories")
-    public List<Category> getAll(){return (List<Category>) categoryRepository.findAll();}
+    public List<Category> getAll(){return categoryRepository.findAll();}
 
     @GetMapping("/categories/{id}")
     public Category getCategory(@PathVariable Long id){return categoryRepository.findById(id).get();}
