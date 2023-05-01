@@ -30,7 +30,7 @@ public class RecipeController {
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
 
-    @PostMapping("recipes")
+    @PostMapping("/users/recipes")
     public Recipe createRecipe(@RequestBody Recipe recipe) {
         Recipe recipeToUse = recipeRepository.save(recipe);
         List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
@@ -42,7 +42,7 @@ public class RecipeController {
         return recipeToUse;
     }
 
-    @PutMapping("/recipes/{id}")
+    @PutMapping("/users/recipes/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
         Recipe recipeToUpdate = recipeRepository.findById(id).get();
         recipeToUpdate.setTitle(recipe.getTitle());
@@ -55,7 +55,7 @@ public class RecipeController {
         return recipeRepository.save(recipeToUpdate);
     }
 
-    @DeleteMapping("/recipes/{id}")
+    @DeleteMapping("/admin/recipes/{id}")
     public Boolean deleteRecipe(@PathVariable Long id){
         recipeRepository.deleteById(id);
         return true;

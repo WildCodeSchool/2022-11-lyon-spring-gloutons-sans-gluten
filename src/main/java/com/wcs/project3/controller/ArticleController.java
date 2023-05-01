@@ -21,10 +21,10 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public Article getArticle(@PathVariable Long id){return articleRepository.findById(id).get();}
 
-    @PostMapping("/articles")
+    @PostMapping("/admin/articles")
     public Article createArticle(@RequestBody Article article) {return articleRepository.save(article);}
 
-    @PutMapping("/articles/{id}")
+    @PutMapping("/admin/articles/{id}")
     public Article updateArticle(@PathVariable Long id, @RequestBody Article article){
         Article articleToUpdate = articleRepository.findById(id).get();
         articleToUpdate.setTitle(article.getTitle());
@@ -33,7 +33,7 @@ public class ArticleController {
         return articleRepository.save(articleToUpdate);
     }
 
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/admin/articles/{id}")
     public Boolean deleteArticle(@PathVariable Long id){
         articleRepository.deleteById(id);
         return true;
