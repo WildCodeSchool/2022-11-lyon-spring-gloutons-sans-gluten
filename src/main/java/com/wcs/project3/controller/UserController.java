@@ -1,13 +1,17 @@
 package com.wcs.project3.controller;
 
+import com.wcs.project3.entity.Article;
 import com.wcs.project3.entity.User;
+import com.wcs.project3.repository.ArticleRepository;
 import com.wcs.project3.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -16,6 +20,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ArticleRepository articleRepository;
 
     @GetMapping("")
     @PreAuthorize("hasRole('ADMIN')")
@@ -29,11 +36,65 @@ public class UserController {
         return userRepository.findByUsername(username).get();
     }
 
+    @GetMapping( "/{userId}/favorites")
+    public List<Article> getFavoriteArticlesByUser(@PathVariable Long userId){
+        userRepository.findById(userId).get();
+        return articleRepository.findUser_FavoriteArticlesByUsersId(userId);}
+
+    @PostMapping   ("/{userId}/favorites/{articleId}")
+    public User addFavorite( @PathVariable Long userId,@PathVariable Long articleId){
+        User userWhoAdds = userRepository.findById(userId).get();
+        Article articleToAdd = articleRepository.findById(articleId).get();
+        userWhoAdds.getFavoriteArticles().add(articleToAdd);
+        return userRepository.save(userWhoAdds);
+    }
+
+
+
+    @PutMapping("/{username}")
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    public boolean updateUser(@PathVariable String username, @RequestBody User user) {
+        User userToUpdate = userRepository.findByUsername(username).get();
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setEmail(user.getEmail());
+        userRepository.save(userToUpdate);
+        return true;
+    }
+
+
+    @PostMapping("/{userId}/password")
+    public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> payload) {
+        String password = payload.get("password");
+
+        // Vérifier la validité du mot de passe
+        if (password == null || password.length() < 8) {
+            return ResponseEntity.badRequest().body("Le mot de passe doit contenir au moins 8 caractères.");
+        }
+
+        // Mettre à jour le mot de passe dans la base de données
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        user.setPassword(password);
+        userRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
     @DeleteMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();
         userRepository.deleteById(userToDelete.getId());
+        return true;
+    }
+    @DeleteMapping   ("/{username}/favorites/{articleId}")
+    @PreAuthorize("#username == authentication.principal.username")
+    public Boolean deleteFavorite( @PathVariable Long username,@PathVariable Long articleId){
+        User userWhoDeletes = userRepository.findById(username).get();
+        Article articleToDelete = articleRepository.findById(articleId).get();
+        userWhoDeletes.getFavoriteArticles().remove(articleToDelete);
+        articleRepository.save(articleToDelete);
         return true;
     }
 }
