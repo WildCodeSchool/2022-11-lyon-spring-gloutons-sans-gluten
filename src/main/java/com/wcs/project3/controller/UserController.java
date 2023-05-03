@@ -5,10 +5,12 @@ import com.wcs.project3.entity.User;
 import com.wcs.project3.repository.ArticleRepository;
 import com.wcs.project3.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -47,6 +49,8 @@ public class UserController {
         return userRepository.save(userWhoAdds);
     }
 
+
+
     @PutMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean updateUser(@PathVariable String username, @RequestBody User user) {
@@ -57,7 +61,27 @@ public class UserController {
         return true;
     }
 
-    @DeleteMapping("/{username}")
+
+    @PostMapping("/{userId}/password")
+    public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> payload) {
+        String password = payload.get("password");
+
+        // Vérifier la validité du mot de passe
+        if (password == null || password.length() < 8) {
+            return ResponseEntity.badRequest().body("Le mot de passe doit contenir au moins 8 caractères.");
+        }
+
+        // Mettre à jour le mot de passe dans la base de données
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        user.setPassword(password);
+        userRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+        @DeleteMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();
