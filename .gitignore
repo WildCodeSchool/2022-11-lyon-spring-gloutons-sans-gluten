@@ -1,14 +1,14 @@
-application.properties
-
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-application.properties
 
 
+
+src/main/resources/application.properties
+>>>>>>> develop
 ### STS ###
 .apt_generated
 .classpath
