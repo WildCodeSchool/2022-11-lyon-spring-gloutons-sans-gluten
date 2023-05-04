@@ -81,11 +81,22 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
         @DeleteMapping("/{username}")
         @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
         public boolean deleteUser(@PathVariable String username) {
+
         User userToDelete = userRepository.findByUsername(username).get();
         userRepository.deleteById(userToDelete.getId());
+        return true;
+    }
+    @DeleteMapping   ("/{username}/favorites/{articleId}")
+    @PreAuthorize("#username == authentication.principal.username")
+    public Boolean deleteFavorite( @PathVariable Long username,@PathVariable Long articleId){
+        User userWhoDeletes = userRepository.findById(username).get();
+        Article articleToDelete = articleRepository.findById(articleId).get();
+        userWhoDeletes.getFavoriteArticles().remove(articleToDelete);
+        articleRepository.save(articleToDelete);
         return true;
     }
 }

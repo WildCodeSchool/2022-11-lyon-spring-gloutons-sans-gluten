@@ -15,6 +15,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,6 @@ public class User {
     @Size(max = 120)
     private String password;
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -45,7 +45,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id"))
     private List<Article> favoriteArticles;
-
 
     @ManyToMany
     @JoinTable(name= "favorite_recipes",
@@ -59,10 +58,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> like_recipes;
 
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Article> articles;
-
 
     public User() {
     }
@@ -116,12 +113,15 @@ public class User {
     public List<Article> getFavoriteArticles() {
         return favoriteArticles;
     }
+
     public void setFavoriteArticles(List<Article> favoriteArticles) {
         this.favoriteArticles = favoriteArticles;
     }
+
     public List<Article> getArticles() {
         return articles;
     }
+
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }

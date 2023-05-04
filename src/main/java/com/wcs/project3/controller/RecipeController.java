@@ -1,6 +1,7 @@
 package com.wcs.project3.controller;
 
 
+import com.wcs.project3.entity.Category;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
 import com.wcs.project3.repository.CategoryRepository;
@@ -30,8 +31,10 @@ public class RecipeController {
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
 
-    @PostMapping("/users/recipes")
-    public Recipe createRecipe(@RequestBody Recipe recipe) {
+    @PostMapping("/recipes")
+    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody Recipe recipe) {
+        Category categoryToUse = categoryRepository.findById(category).get();
+        recipe.setCategory(categoryToUse);
         Recipe recipeToUse = recipeRepository.save(recipe);
         List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
 
@@ -42,7 +45,7 @@ public class RecipeController {
         return recipeToUse;
     }
 
-    @PutMapping("/users/recipes/{id}")
+    @PutMapping("/recipes/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
         Recipe recipeToUpdate = recipeRepository.findById(id).get();
         recipeToUpdate.setTitle(recipe.getTitle());
@@ -55,7 +58,7 @@ public class RecipeController {
         return recipeRepository.save(recipeToUpdate);
     }
 
-    @DeleteMapping("/admin/recipes/{id}")
+    @DeleteMapping("/recipes/{id}")
     public Boolean deleteRecipe(@PathVariable Long id){
         recipeRepository.deleteById(id);
         return true;
