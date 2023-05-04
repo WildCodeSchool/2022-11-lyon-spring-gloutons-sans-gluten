@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     ArticleRepository articleRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @GetMapping("")
     @PreAuthorize("hasRole('ADMIN')")
@@ -42,6 +46,7 @@ public class UserController {
         return articleRepository.findUser_FavoriteArticlesByUsersId(userId);}
 
     @PostMapping   ("/{userId}/favorites/{articleId}")
+    @PreAuthorize("#userId == authentication.principal.userId")
     public User addFavorite( @PathVariable Long userId,@PathVariable Long articleId){
         User userWhoAdds = userRepository.findById(userId).get();
         Article articleToAdd = articleRepository.findById(articleId).get();
@@ -62,28 +67,23 @@ public class UserController {
     }
 
 
-    @PostMapping("/{userId}/password")
-    public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> payload) {
-        String password = payload.get("password");
-
-        // Vérifier la validité du mot de passe
-        if (password == null || password.length() < 8) {
-            return ResponseEntity.badRequest().body("Le mot de passe doit contenir au moins 8 caractères.");
-        }
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> body) {
 
         // Mettre à jour le mot de passe dans la base de données
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        user.setPassword(password);
+
+        user.setPassword(encoder.encode(body.get("newPassword")));
         userRepository.save(user);
 
         return ResponseEntity.ok().build();
     }
         @DeleteMapping("/{username}")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
-    public boolean deleteUser(@PathVariable String username) {
+        @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+        public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();
         userRepository.deleteById(userToDelete.getId());
         return true;
