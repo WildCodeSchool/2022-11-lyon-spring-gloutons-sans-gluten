@@ -12,9 +12,6 @@ public class Category {
     private String name;
     private String logo;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Recipe> recipes;
-
     public Category() { }
 
     public Long getId() {
@@ -41,8 +38,5 @@ public class Category {
         this.logo = logo;
     }
 
-    public List<Recipe> getRecipes() { return recipes; }
-
-    public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
 }
 

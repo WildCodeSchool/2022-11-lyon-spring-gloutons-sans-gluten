@@ -27,8 +27,6 @@ public class Article {
     @JsonIgnore
     private User user;
 
-
-
     @ManyToMany(mappedBy = "favoriteArticles", cascade = CascadeType.REFRESH)
     @JsonIgnoreProperties("favoriteArticles")
     private List<User> users;
@@ -83,7 +81,6 @@ public class Article {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
     public User getUser() {
         return user;

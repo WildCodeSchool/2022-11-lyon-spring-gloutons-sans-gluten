@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 public class Step {
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String title;
