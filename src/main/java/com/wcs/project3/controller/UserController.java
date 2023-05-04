@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -36,14 +37,16 @@ public class UserController {
         return userRepository.findByUsername(username).get();
     }
 
-    @GetMapping( "/{userId}/favorites")
-    public List<Article> getFavoriteArticlesByUser(@PathVariable Long userId){
-        userRepository.findById(userId).get();
-        return articleRepository.findUser_FavoriteArticlesByUsersId(userId);}
+    @GetMapping( "/{username}/favorites")
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    public List<Article> getFavoriteArticlesByUser(@PathVariable String username){
+       userRepository.findByUsername(username).get();
+        return articleRepository.findUser_FavoriteArticlesByUsersUsername(username);}
 
-    @PostMapping   ("/{userId}/favorites/{articleId}")
-    public User addFavorite( @PathVariable Long userId,@PathVariable Long articleId){
-        User userWhoAdds = userRepository.findById(userId).get();
+    @PostMapping   ("/{username}/favorites/{articleId}")
+    @PreAuthorize("#username == authentication.principal.username")
+    public User addFavorite( @PathVariable String username,@PathVariable Long articleId){
+        User userWhoAdds = userRepository.findByUsername(username).get();
         Article articleToAdd = articleRepository.findById(articleId).get();
         userWhoAdds.getFavoriteArticles().add(articleToAdd);
         return userRepository.save(userWhoAdds);
@@ -90,8 +93,8 @@ public class UserController {
     }
     @DeleteMapping   ("/{username}/favorites/{articleId}")
     @PreAuthorize("#username == authentication.principal.username")
-    public Boolean deleteFavorite( @PathVariable Long username,@PathVariable Long articleId){
-        User userWhoDeletes = userRepository.findById(username).get();
+    public Boolean deleteFavorite( @PathVariable String username,@PathVariable Long articleId){
+        User userWhoDeletes = userRepository.findByUsername(username).get();
         Article articleToDelete = articleRepository.findById(articleId).get();
         userWhoDeletes.getFavoriteArticles().remove(articleToDelete);
         articleRepository.save(articleToDelete);
