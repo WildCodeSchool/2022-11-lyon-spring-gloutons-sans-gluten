@@ -84,7 +84,7 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-        @DeleteMapping("/{username}")
+    @DeleteMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();

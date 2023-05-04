@@ -1,8 +1,6 @@
 package com.wcs.project3.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name= "category_id")
-    @JsonIgnore
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -38,7 +35,7 @@ public class Recipe {
     @JoinColumn(name="recipe_id")
     private List<Step> steps;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.REFRESH, orphanRemoval = true)
     private List<RecipeIngredient> ingredients;
 
     public Recipe() { }

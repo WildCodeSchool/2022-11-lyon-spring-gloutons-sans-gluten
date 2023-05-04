@@ -9,7 +9,7 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
-    private int quantity;
+    private String quantity;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="recipe_id")
@@ -26,11 +26,11 @@ public class RecipeIngredient {
 
     public void setId(Long id) { this.id = id; }
 
-    public Integer getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
