@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-//    List<Article> findUser_FavoriteArticlesByUsersId(Long users_id);
     List<Article> findUser_FavoriteArticlesByUsersUsername(String username);
 
 }
