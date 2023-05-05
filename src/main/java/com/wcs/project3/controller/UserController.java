@@ -71,6 +71,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}/password")
+    @PreAuthorize("#userId == authentication.principal.userId or hasRole('ADMIN')")
     public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> body) {
 
         // Mettre à jour le mot de passe dans la base de données
