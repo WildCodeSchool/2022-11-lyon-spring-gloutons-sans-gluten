@@ -80,10 +80,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        user.setPassword(encoder.encode(body.get("newPassword")));
-        userRepository.save(user);
+        boolean areSamePasswords = encoder.matches(body.get("actualPassword"), user.getPassword());
 
-        return ResponseEntity.ok().build();
+        if (areSamePasswords) {
+            user.setPassword(encoder.encode(body.get("newPassword")));
+            userRepository.save(user);
+
+            return ResponseEntity.ok().build();
+        }
+        return null;
     }
 
         @DeleteMapping("/{username}")

@@ -24,9 +24,9 @@ public class ArticleController {
     @PostMapping("/admin/articles")
     public Article createArticle(@RequestBody Article article) {return articleRepository.save(article);}
 
-    @PutMapping("/admin/articles/{id}")
-    public Article updateArticle(@PathVariable Long id, @RequestBody Article article){
-        Article articleToUpdate = articleRepository.findById(id).get();
+    @PutMapping("/admin/articles/{articleId}")
+    public Article updateArticle(@PathVariable Long articleId, @RequestBody Article article){
+        Article articleToUpdate = articleRepository.findById(articleId).get();
         articleToUpdate.setTitle(article.getTitle());
         articleToUpdate.setImage(article.getImage());
         articleToUpdate.setContent(article.getContent());
