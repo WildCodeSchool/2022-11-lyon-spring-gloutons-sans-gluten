@@ -3,6 +3,7 @@ package com.wcs.project3.controller;
 import com.wcs.project3.entity.Article;
 import com.wcs.project3.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,18 +24,18 @@ public class ArticleController {
     @PostMapping("/admin/articles")
     public Article createArticle(@RequestBody Article article) {return articleRepository.save(article);}
 
-    @PutMapping("/admin/articles/{id}")
-    public Article updateArticle(@PathVariable Long id, @RequestBody Article article){
-        Article articleToUpdate = articleRepository.findById(id).get();
+    @PutMapping("/admin/articles/{articleId}")
+    public Article updateArticle(@PathVariable Long articleId, @RequestBody Article article){
+        Article articleToUpdate = articleRepository.findById(articleId).get();
         articleToUpdate.setTitle(article.getTitle());
         articleToUpdate.setImage(article.getImage());
         articleToUpdate.setContent(article.getContent());
         return articleRepository.save(articleToUpdate);
     }
 
-    @DeleteMapping("/admin/articles/{id}")
-    public Boolean deleteArticle(@PathVariable Long id){
-        articleRepository.deleteById(id);
+    @DeleteMapping("/admin/articles/{articleId}")
+    public Boolean deleteArticle(@PathVariable Long articleId){
+        articleRepository.deleteById(articleId);
         return true;
     }
 
