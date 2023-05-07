@@ -1,7 +1,10 @@
 package com.wcs.project3.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,11 +20,13 @@ public class Recipe {
     private Long  totalTime;
     private boolean validated;
 
-    @ManyToMany(mappedBy = "favorite_recipes")
-    private List<User> favoriteUsers = new ArrayList<>();
+    @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.REFRESH)
+    @JsonBackReference("favoriteRecipes")
+    private List<User> favoriteUsers;
 
-    @ManyToMany(mappedBy = "like_recipes")
-    private List<User> likeUsers = new ArrayList<>();
+    @ManyToMany(mappedBy = "likeRecipes")
+    @JsonIgnoreProperties("likeRecipes")
+    private List<User> likeUsers;
 
     @ManyToOne
     @JoinColumn(name= "category_id")
@@ -29,6 +34,7 @@ public class Recipe {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

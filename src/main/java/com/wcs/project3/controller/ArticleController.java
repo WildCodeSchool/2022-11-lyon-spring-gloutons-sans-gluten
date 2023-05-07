@@ -38,6 +38,5 @@ public class ArticleController {
         articleRepository.deleteById(articleId);
         return true;
     }
-
 }
 
