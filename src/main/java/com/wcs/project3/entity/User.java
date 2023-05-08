@@ -55,6 +55,7 @@ public class User {
     private List<Recipe> favoriteRecipes;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(name= "Like_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))

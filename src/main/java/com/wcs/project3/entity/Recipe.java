@@ -25,7 +25,7 @@ public class Recipe {
     private List<User> favoriteUsers;
 
     @ManyToMany(mappedBy = "likeRecipes")
-    @JsonIgnoreProperties("likeRecipes")
+    @JsonBackReference("likeRecipes")
     private List<User> likeUsers;
 
     @ManyToOne

@@ -55,6 +55,12 @@ public class UserController {
         userRepository.findByUsername(username).get();
         return recipeRepository.findUser_FavoriteRecipesByFavoriteUsersUsername(username);}
 
+    @GetMapping( "/{username}/likesRecipes")
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    public List<Recipe> getlikeRecipesByUser(@PathVariable String username){
+        userRepository.findByUsername(username).get();
+        return recipeRepository.findUser_LikeRecipesByLikeUsersUsername(username);}
+
     @PostMapping   ("/{username}/favorites/{articleId}")
     @PreAuthorize("#username == authentication.principal.username")
     public User addFavorite( @PathVariable String username,@PathVariable Long articleId){
@@ -69,6 +75,15 @@ public class UserController {
         User userWhoAdds = userRepository.findByUsername(username).get();
         Recipe recipeToAdd = recipeRepository.findById(recipeId).get();
         userWhoAdds.getFavoriteRecipes().add(recipeToAdd);
+        return userRepository.save(userWhoAdds);
+    }
+
+    @PostMapping   ("/{username}/likesRecipes/{recipeId}")
+//    @PreAuthorize("#username == authentication.principal.username")
+    public User addLikeRecipe( @PathVariable String username,@PathVariable Long recipeId){
+        User userWhoAdds = userRepository.findByUsername(username).get();
+        Recipe recipeToAdd = recipeRepository.findById(recipeId).get();
+        userWhoAdds.getLikeRecipes().add(recipeToAdd);
         return userRepository.save(userWhoAdds);
     }
 
@@ -125,4 +140,13 @@ public class UserController {
         return true;
     }
 
+    @DeleteMapping   ("/{username}/likesRecipes/{recipeId}")
+    @PreAuthorize("#username == authentication.principal.username")
+    public Boolean deleteLikeRecipe( @PathVariable String username,@PathVariable Long recipeId){
+        User userWhoDeletes = userRepository.findByUsername(username).get();
+        Recipe recipeToDelete = recipeRepository.findById(recipeId).get();
+        userWhoDeletes.getLikeRecipes().remove(recipeToDelete);
+        recipeRepository.save(recipeToDelete);
+        return true;
+    }
 }
