@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-//    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public User getProfile(@PathVariable String username) {
         return userRepository.findByUsername(username).get();
     }
@@ -50,10 +50,10 @@ public class UserController {
        return articleRepository.findUser_FavoriteArticlesByUsersUsername(username);}
 
     @GetMapping( "/{username}/favoritesRecipes")
-//    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public List<Recipe> getFavoriteRecipesByUser(@PathVariable String username){
         userRepository.findByUsername(username).get();
-        return recipeRepository.findUser_FavoriteRecipesByUser_Username(username);}
+        return recipeRepository.findUser_FavoriteRecipesByFavoriteUsersUsername(username);}
 
     @PostMapping   ("/{username}/favorites/{articleId}")
     @PreAuthorize("#username == authentication.principal.username")
@@ -116,7 +116,7 @@ public class UserController {
         return true;
     }
     @DeleteMapping   ("/{username}/favoritesRecipes/{recipeId}")
-//    @PreAuthorize("#username == authentication.principal.username")
+    @PreAuthorize("#username == authentication.principal.username")
     public Boolean deleteFavoriteRecipe( @PathVariable String username,@PathVariable Long recipeId){
         User userWhoDeletes = userRepository.findByUsername(username).get();
         Recipe recipeToDelete = recipeRepository.findById(recipeId).get();
