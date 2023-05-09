@@ -3,13 +3,18 @@ package com.wcs.project3.controller;
 import com.wcs.project3.entity.Category;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
+import com.wcs.project3.entity.Step;
+import com.wcs.project3.payload.request.CreateRecipeRequest;
 import com.wcs.project3.repository.CategoryRepository;
 import com.wcs.project3.repository.RecipeIngredientRepository;
 import com.wcs.project3.repository.RecipeRepository;
+import com.wcs.project3.repository.StepRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +27,8 @@ public class RecipeController {
     RecipeRepository recipeRepository;
     @Autowired
     CategoryRepository categoryRepository;
-
+    @Autowired
+    StepRepository stepRepository;
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
 
@@ -39,16 +45,39 @@ public class RecipeController {
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
 
     @PostMapping("/recipes")
-    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody Recipe recipe) {
+    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody CreateRecipeRequest body) {
+
+        Recipe newRecipe = new Recipe();
         Category categoryToUse = categoryRepository.findById(category).get();
-        recipe.setCategory(categoryToUse);
-        Recipe recipeToUse = recipeRepository.save(recipe);
-        List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
+
+        newRecipe.setTitle(body.getTitle());
+        newRecipe.setImage(body.getImage());
+        newRecipe.setPersonNumber(body.getPersonNumber());
+        newRecipe.setPreparationTime(body.getPreparationTime());
+        newRecipe.setCookingTime(body.getCookingTime());
+        newRecipe.setTotalTime(body.getTotalTime());
+        newRecipe.setValidated(true);
+        newRecipe.setCategory(categoryToUse);
+
+//        List<Step> stepsList = new ArrayList<>();
+//
+//        for (int i = 0; i < body.getSteps().size(); i++) {
+//            Step newStep = stepRepository.save(body.getSteps().get(i));
+//            stepsList.add(newStep);
+//        }
+
+        newRecipe.setSteps(body.getSteps());
+
+        Recipe recipeToUse = recipeRepository.save(newRecipe);
+
+        List<RecipeIngredient> ingredientsToUse = body.getIngredients();
+
 
         for (int i = 0; i < ingredientsToUse.size(); i++) {
             ingredientsToUse.get(i).setRecipe(recipeToUse);
             recipeIngredientRepository.save(ingredientsToUse.get(i));
         }
+
         return recipeToUse;
     }
 
