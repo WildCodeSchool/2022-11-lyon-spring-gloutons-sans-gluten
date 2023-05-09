@@ -3,7 +3,6 @@ package com.wcs.project3.controller;
 import com.wcs.project3.entity.Category;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
-import com.wcs.project3.entity.Step;
 import com.wcs.project3.payload.request.CreateRecipeRequest;
 import com.wcs.project3.repository.CategoryRepository;
 import com.wcs.project3.repository.RecipeIngredientRepository;
@@ -11,7 +10,6 @@ import com.wcs.project3.repository.RecipeRepository;
 import com.wcs.project3.repository.StepRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,11 +32,26 @@ public class RecipeController {
 
     @GetMapping("/recipes")
     public List<Recipe> getAllRecipes(){
+        List<Recipe> validatedRecipes = new ArrayList<>();
         List<Recipe> recipes = recipeRepository.findAll();
         for (Recipe recipe : recipes){
-        recipe.setNumberOfLikes(recipe.getLikeUsers().size());
+            if (recipe.isValidated()){
+                validatedRecipes.add(recipe);
+                recipe.setNumberOfLikes(recipe.getLikeUsers().size());
+            }
         }
-        return recipes;
+        return validatedRecipes;
+    }
+    @GetMapping("/notValidatedRecipes")
+    public List<Recipe> getAllNotValidatedRecipes(){
+        List<Recipe> notValidatedRecipes = new ArrayList<>();
+        List<Recipe> recipes = recipeRepository.findAll();
+        for (Recipe recipe : recipes){
+            if (recipe.isValidated() == false){
+                notValidatedRecipes.add(recipe);
+            }
+        }
+        return notValidatedRecipes;
     }
 
     @GetMapping("/recipes/{id}")
@@ -56,7 +69,7 @@ public class RecipeController {
         newRecipe.setPreparationTime(body.getPreparationTime());
         newRecipe.setCookingTime(body.getCookingTime());
         newRecipe.setTotalTime(body.getTotalTime());
-        newRecipe.setValidated(true);
+        newRecipe.setValidated(body.getValidated());
         newRecipe.setCategory(categoryToUse);
 
 //        List<Step> stepsList = new ArrayList<>();
