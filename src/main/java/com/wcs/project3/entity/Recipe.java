@@ -2,8 +2,6 @@ package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,12 +17,15 @@ public class Recipe {
     private Long cookingTime;
     private Long  totalTime;
     private boolean validated;
+    @Transient
+    // Précise que numberOfLikes ne doit pas être sauvegardé en base de données
+    private int numberOfLikes;
 
-    @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.REFRESH)
+    @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.DETACH)
     @JsonBackReference("favoriteRecipes")
     private List<User> favoriteUsers;
 
-    @ManyToMany(mappedBy = "likeRecipes")
+    @ManyToMany(mappedBy = "likeRecipes", cascade = CascadeType.DETACH)
     @JsonBackReference("likeRecipes")
     private List<User> likeUsers;
 
@@ -156,6 +157,12 @@ public class Recipe {
 
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public int getNumberOfLikes() {return numberOfLikes;}
+
+    public void setNumberOfLikes(int numberOfLikes) {
+        this.numberOfLikes = numberOfLikes;
     }
 }
 

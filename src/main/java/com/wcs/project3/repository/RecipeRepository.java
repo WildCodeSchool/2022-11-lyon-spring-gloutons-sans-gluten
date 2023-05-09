@@ -13,4 +13,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe>findUser_FavoriteRecipesByFavoriteUsersUsername(String username);
 
     List<Recipe> findUser_LikeRecipesByLikeUsersUsername(String username);
+
 }

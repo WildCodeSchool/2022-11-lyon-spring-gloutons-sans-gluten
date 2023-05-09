@@ -6,10 +6,12 @@ import com.wcs.project3.entity.RecipeIngredient;
 import com.wcs.project3.repository.CategoryRepository;
 import com.wcs.project3.repository.RecipeIngredientRepository;
 import com.wcs.project3.repository.RecipeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -25,7 +27,13 @@ public class RecipeController {
     RecipeIngredientRepository recipeIngredientRepository;
 
     @GetMapping("/recipes")
-    public List<Recipe> getAll(){return recipeRepository.findAll();}
+    public List<Recipe> getAllRecipes(){
+        List<Recipe> recipes = recipeRepository.findAll();
+        for (Recipe recipe : recipes){
+        recipe.setNumberOfLikes(recipe.getLikeUsers().size());
+        }
+        return recipes;
+    }
 
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
@@ -57,10 +65,31 @@ public class RecipeController {
         return recipeRepository.save(recipeToUpdate);
     }
 
+    @Transactional
+//    s'assurer que toutes les opérations de suppression sont effectuées dans une transaction unique.
     @DeleteMapping("/recipes/{id}")
-    public Boolean deleteRecipe(@PathVariable Long id){
+    public Boolean deleteRecipe(@PathVariable Long id) {
+        Recipe recipe = recipeRepository.findById(id).get();
+        // Supprimer la relation entre la recette et les utilisateurs qui l'ont aimée
+        recipe.getLikeUsers().forEach(user -> user.getLikeRecipes().remove(recipe));
+        recipe.getLikeUsers().clear();
+        // Supprimer la relation entre la recette et les utilisateurs qui l'ont ajoutée en favoris
+        recipe.getFavoriteUsers().forEach(user -> user.getFavoriteRecipes().remove(recipe));
+        recipe.getFavoriteUsers().clear();
+        // Effacer la recette
         recipeRepository.deleteById(id);
         return true;
     }
+    @GetMapping("/recipes/{id}/likes")
+    public int getNumberOfLikesForRecipe(@PathVariable Long id) {
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        int numberOfLikes = 0;
+        if (recipe.isPresent()){
+            numberOfLikes = recipe.get().getLikeUsers().size();
+        }
+        System.out.println(recipe.get().getLikeUsers().size());
+        return numberOfLikes;
+    }
+
 }
 

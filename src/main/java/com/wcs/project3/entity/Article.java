@@ -28,6 +28,7 @@ public class Article {
     private User user;
 
     @ManyToMany(mappedBy = "favoriteArticles", cascade = CascadeType.REFRESH)
+//    vérifier si effacer un article efface les users qui l'ont mis en favoris sinon voire , cascade = CascadeType.DETACH
     @JsonIgnoreProperties("favoriteArticles")
     private List<User> users;
 

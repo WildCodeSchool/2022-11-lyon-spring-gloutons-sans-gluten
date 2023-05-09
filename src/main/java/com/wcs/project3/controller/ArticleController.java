@@ -3,7 +3,6 @@ package com.wcs.project3.controller;
 import com.wcs.project3.entity.Article;
 import com.wcs.project3.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
