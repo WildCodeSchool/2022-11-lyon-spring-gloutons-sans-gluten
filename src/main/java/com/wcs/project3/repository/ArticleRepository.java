@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findUser_FavoriteArticlesByUsersUsername(String username);
+    List<Article> findUser_FavoriteArticlesByFavoriteUsersUsername(String username);
 
 }
 

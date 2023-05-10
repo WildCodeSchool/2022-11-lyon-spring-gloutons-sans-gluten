@@ -1,7 +1,7 @@
 package com.wcs.project3.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +16,17 @@ public class Recipe {
     private Long cookingTime;
     private Long  totalTime;
     private boolean validated;
+    @Transient
+    // Précise que numberOfLikes ne doit pas être sauvegardé en base de données
+    private int numberOfLikes;
 
-    @ManyToMany(mappedBy = "favorite_recipes")
-    private List<User> favoriteUsers = new ArrayList<>();
+    @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.DETACH)
+    @JsonIgnore
+    private List<User> favoriteUsers;
 
-    @ManyToMany(mappedBy = "like_recipes")
-    private List<User> likeUsers = new ArrayList<>();
+    @ManyToMany(mappedBy = "likeRecipes", cascade = CascadeType.DETACH)
+    @JsonIgnore
+    private List<User> likeUsers;
 
     @ManyToOne
     @JoinColumn(name= "category_id")
@@ -29,6 +34,7 @@ public class Recipe {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -150,6 +156,12 @@ public class Recipe {
 
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public int getNumberOfLikes() {return numberOfLikes;}
+
+    public void setNumberOfLikes(int numberOfLikes) {
+        this.numberOfLikes = numberOfLikes;
     }
 }
 

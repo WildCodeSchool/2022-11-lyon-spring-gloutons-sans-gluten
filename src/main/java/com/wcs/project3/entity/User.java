@@ -1,6 +1,9 @@
 package com.wcs.project3.entity;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonBackReference;
+=======
+>>>>>>> develop
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -36,11 +39,14 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Article> articles;
 
     @ManyToMany
     @JoinTable(name= "favorite_articles",
@@ -52,16 +58,19 @@ public class User {
     @JoinTable(name= "favorite_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
-    private List<Recipe> favorite_recipes;
+    private List<Recipe> favoriteRecipes;
 
     @ManyToMany
     @JoinTable(name= "Like_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
-    private List<Recipe> like_recipes;
+    private List<Recipe> likeRecipes;
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "user", cascade = CascadeType.REFRESH)
     private List<Article> articles;
+=======
+>>>>>>> develop
 
     public User() {
     }
@@ -128,20 +137,19 @@ public class User {
         this.articles = articles;
     }
 
-    public List<Recipe> getFavorite_recipes() {
-        return favorite_recipes;
+    public List<Recipe> getFavoriteRecipes() {
+        return favoriteRecipes;
     }
 
-    public void setFavorite_recipes(List<Recipe> favorite_recipes) {
-        this.favorite_recipes = favorite_recipes;
+    public void setFavoriteRecipes(List<Recipe> favoriteRecipes) {
+        this.favoriteRecipes = favoriteRecipes;
     }
 
-    public List<Recipe> getLike_recipes() {
-        return like_recipes;
+    public List<Recipe> getLikeRecipes() {
+        return likeRecipes;
     }
 
-    public void setLike_recipes(List<Recipe> like_recipes) {
-        this.like_recipes = like_recipes;
+    public void setLikeRecipes(List<Recipe> likeRecipes) {
+        this.likeRecipes = likeRecipes;
     }
-
 }
