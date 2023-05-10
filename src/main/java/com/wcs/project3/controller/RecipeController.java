@@ -47,7 +47,7 @@ public class RecipeController {
         List<Recipe> notValidatedRecipes = new ArrayList<>();
         List<Recipe> recipes = recipeRepository.findAll();
         for (Recipe recipe : recipes){
-            if (recipe.isValidated() == false){
+            if (!recipe.isValidated()){
                 notValidatedRecipes.add(recipe);
             }
         }
@@ -71,21 +71,16 @@ public class RecipeController {
         newRecipe.setTotalTime(body.getTotalTime());
         newRecipe.setValidated(body.getValidated());
         newRecipe.setCategory(categoryToUse);
-
+        newRecipe.setSteps(body.getSteps());
 //        List<Step> stepsList = new ArrayList<>();
 //
 //        for (int i = 0; i < body.getSteps().size(); i++) {
 //            Step newStep = stepRepository.save(body.getSteps().get(i));
 //            stepsList.add(newStep);
 //        }
-
-        newRecipe.setSteps(body.getSteps());
-
         Recipe recipeToUse = recipeRepository.save(newRecipe);
 
         List<RecipeIngredient> ingredientsToUse = body.getIngredients();
-
-
         for (int i = 0; i < ingredientsToUse.size(); i++) {
             ingredientsToUse.get(i).setRecipe(recipeToUse);
             recipeIngredientRepository.save(ingredientsToUse.get(i));
@@ -122,6 +117,7 @@ public class RecipeController {
         recipeRepository.deleteById(id);
         return true;
     }
+
     @GetMapping("/recipes/{id}/likes")
     public int getNumberOfLikesForRecipe(@PathVariable Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
