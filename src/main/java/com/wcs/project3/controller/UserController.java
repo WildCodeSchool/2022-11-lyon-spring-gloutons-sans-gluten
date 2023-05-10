@@ -30,7 +30,7 @@ public class UserController {
     PasswordEncoder encoder;
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -56,6 +56,8 @@ public class UserController {
         userWhoAdds.getFavoriteArticles().add(articleToAdd);
         return userRepository.save(userWhoAdds);
     }
+
+
 
 
 

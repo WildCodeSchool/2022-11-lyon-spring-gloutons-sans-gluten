@@ -38,6 +38,9 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.REFRESH, orphanRemoval = true)
     private List<RecipeIngredient> ingredients;
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comments> comments = new ArrayList<>();
+
     public Recipe() { }
 
     public Long getId() {
@@ -150,6 +153,14 @@ public class Recipe {
 
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public List<Comments> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comments> comments) {
+        this.comments = comments;
     }
 }
 
