@@ -47,7 +47,7 @@ public class UserController {
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public List<Article> getFavoriteArticlesByUser(@PathVariable String username){
        userRepository.findByUsername(username).get();
-       return articleRepository.findUser_FavoriteArticlesByUsersUsername(username);}
+       return articleRepository.findUser_FavoriteArticlesByFavoriteUsersUsername(username);}
 
     @GetMapping( "/{username}/favoritesRecipes")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")

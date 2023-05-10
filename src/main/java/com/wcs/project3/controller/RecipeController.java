@@ -89,7 +89,6 @@ public class RecipeController {
             ingredientsToUse.get(i).setRecipe(recipeToUse);
             recipeIngredientRepository.save(ingredientsToUse.get(i));
         }
-
         return recipeToUse;
     }
 

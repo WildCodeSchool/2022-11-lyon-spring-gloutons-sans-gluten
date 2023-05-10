@@ -21,11 +21,11 @@ public class Recipe {
     private int numberOfLikes;
 
     @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.DETACH)
-    @JsonBackReference("favoriteRecipes")
+    @JsonIgnore
     private List<User> favoriteUsers;
 
     @ManyToMany(mappedBy = "likeRecipes", cascade = CascadeType.DETACH)
-    @JsonBackReference("likeRecipes")
+    @JsonIgnore
     private List<User> likeUsers;
 
     @ManyToOne

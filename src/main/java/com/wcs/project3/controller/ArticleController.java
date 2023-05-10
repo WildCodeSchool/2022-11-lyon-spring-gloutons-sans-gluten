@@ -2,6 +2,7 @@ package com.wcs.project3.controller;
 
 import com.wcs.project3.entity.Article;
 import com.wcs.project3.repository.ArticleRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,14 @@ public class ArticleController {
         return articleRepository.save(articleToUpdate);
     }
 
+    @Transactional
     @DeleteMapping("/admin/articles/{articleId}")
     public Boolean deleteArticle(@PathVariable Long articleId){
+        Article article = articleRepository.findById(articleId).get();
+        // Supprimer la relation entre l'article et les utilisateurs qui l'ont ajoutée en favoris
+        article.getFavoriteUsers().forEach(user -> user.getFavoriteArticles().remove(article));
+        article.getFavoriteUsers().clear();
+        // Effacer l'article
         articleRepository.deleteById(articleId);
         return true;
     }
