@@ -10,6 +10,7 @@ import com.wcs.project3.repository.RecipeRepository;
 import com.wcs.project3.repository.StepRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -92,7 +93,8 @@ public class RecipeController {
         return recipeToUse;
     }
 
-    @PutMapping("/recipes/{id}")
+    @PutMapping("admin/recipes/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
         Recipe recipeToUpdate = recipeRepository.findById(id).get();
         recipeToUpdate.setTitle(recipe.getTitle());
