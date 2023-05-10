@@ -1,10 +1,5 @@
 package com.wcs.project3.entity;
 
-<<<<<<< HEAD
-import com.fasterxml.jackson.annotation.JsonBackReference;
-=======
->>>>>>> develop
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -66,11 +61,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> likeRecipes;
 
-<<<<<<< HEAD
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REFRESH)
-    private List<Article> articles;
-=======
->>>>>>> develop
 
     public User() {
     }

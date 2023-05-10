@@ -1,12 +1,6 @@
 package com.wcs.project3.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-<<<<<<< HEAD
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-=======
->>>>>>> develop
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,15 +27,11 @@ public class Article {
     @JsonIgnore
     private User user;
 
-<<<<<<< HEAD
-    @ManyToMany(mappedBy = "favoriteArticles", cascade = CascadeType.REMOVE)
-    @JsonIgnoreProperties("favoriteArticles")
-    private List<User> users;
-=======
+
     @ManyToMany(mappedBy = "favoriteArticles", cascade = CascadeType.DETACH)
     @JsonIgnore
     private List<User> favoriteUsers;
->>>>>>> develop
+
 
     public Article() {
     }
