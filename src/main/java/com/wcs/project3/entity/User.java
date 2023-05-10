@@ -41,6 +41,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Article> articles;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name= "favorite_articles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -61,8 +64,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> likeRecipes;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Article> articles;
 
     public User() {
     }

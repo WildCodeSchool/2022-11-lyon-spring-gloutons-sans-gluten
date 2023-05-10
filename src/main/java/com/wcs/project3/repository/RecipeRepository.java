@@ -8,10 +8,9 @@ import java.util.List;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    List<Recipe> findRecipesByCategoryId(Long categoryId);
-
     List<Recipe>findUser_FavoriteRecipesByFavoriteUsersUsername(String username);
 
     List<Recipe> findUser_LikeRecipesByLikeUsersUsername(String username);
 
+    List<Recipe> findRecipesByCategoryName(String categoryName);
 }
