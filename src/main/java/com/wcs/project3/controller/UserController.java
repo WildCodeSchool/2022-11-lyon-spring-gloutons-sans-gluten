@@ -71,7 +71,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}/password")
-    @PreAuthorize("#userId == authentication.principal.userId or hasRole('ADMIN')")
+    @PreAuthorize(" hasRole('USER')")
     public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> body) {
 
         // Mettre à jour le mot de passe dans la base de données
@@ -107,5 +107,4 @@ public class UserController {
         userWhoDeletes.getFavoriteArticles().remove(articleToDelete);
         articleRepository.save(articleToDelete);
         return true;
-    }
-}
+    }}
