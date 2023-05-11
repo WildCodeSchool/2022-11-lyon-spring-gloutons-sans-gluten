@@ -1,6 +1,7 @@
 package com.wcs.project3.controller;
 
 
+import com.wcs.project3.entity.Article;
 import com.wcs.project3.entity.Comments;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.User;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -31,6 +33,8 @@ public class CommentsController {
     @Autowired
     UserRepository userRepository;
 
+    @GetMapping("/comments")
+    public List<Comments> getAll(){return commentsRepository.findAll();}
 
     @PostMapping("/comments")
     public ResponseEntity<?> createComment(@RequestParam Long recipeId, @RequestParam String username, @RequestBody Comments comment) {
