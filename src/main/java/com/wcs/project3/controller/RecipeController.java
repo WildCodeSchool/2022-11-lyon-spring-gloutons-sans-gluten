@@ -92,7 +92,7 @@ public class RecipeController {
         }
         return recipeToUse;
     }
-
+    @Transactional
     @PutMapping("admin/recipes/{recipeId}/categories")
     @PreAuthorize("hasRole('ADMIN')")
     public Recipe updateRecipe(@PathVariable Long recipeId,@RequestParam Long category, @RequestBody Recipe recipe){
@@ -107,7 +107,17 @@ public class RecipeController {
         recipeToUpdate.setValidated(recipe.isValidated());
         recipeToUpdate.setCategory(categoryToUse);
         recipeToUpdate.setSteps(recipe.getSteps());
-        return recipeRepository.save(recipeToUpdate);
+
+        Recipe createdRecipe = recipeRepository.save(recipeToUpdate);
+
+        recipeIngredientRepository.deleteRecipeIngredientsByRecipe(recipeToUpdate);
+
+        List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
+        for (int i = 0; i < ingredientsToUse.size(); i++) {
+            ingredientsToUse.get(i).setRecipe(createdRecipe);
+            recipeIngredientRepository.save(ingredientsToUse.get(i));
+        }
+        return createdRecipe;
     }
 
     @Transactional
