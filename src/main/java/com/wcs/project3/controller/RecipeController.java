@@ -93,10 +93,11 @@ public class RecipeController {
         return recipeToUse;
     }
 
-    @PutMapping("admin/recipes/{id}")
+    @PutMapping("admin/recipes/{recipeId}/categories")
     @PreAuthorize("hasRole('ADMIN')")
-    public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
-        Recipe recipeToUpdate = recipeRepository.findById(id).get();
+    public Recipe updateRecipe(@PathVariable Long recipeId,@RequestParam Long category, @RequestBody Recipe recipe){
+        Category categoryToUse = categoryRepository.findById(category).get();
+        Recipe recipeToUpdate = recipeRepository.findById(recipeId).get();
         recipeToUpdate.setTitle(recipe.getTitle());
         recipeToUpdate.setImage(recipe.getImage());
         recipeToUpdate.setPersonNumber(recipe.getPersonNumber());
@@ -104,6 +105,8 @@ public class RecipeController {
         recipeToUpdate.setCookingTime(recipe.getCookingTime());
         recipeToUpdate.setTotalTime(recipe.getTotalTime());
         recipeToUpdate.setValidated(recipe.isValidated());
+        recipeToUpdate.setCategory(categoryToUse);
+        recipeToUpdate.setSteps(recipe.getSteps());
         return recipeRepository.save(recipeToUpdate);
     }
 
