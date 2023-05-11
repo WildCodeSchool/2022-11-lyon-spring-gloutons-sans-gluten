@@ -3,6 +3,8 @@ package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -16,12 +18,10 @@ public class Comments {
     @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @CreationTimestamp
     private Date createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @UpdateTimestamp
     private Date updatedAt;
 
     @Column(name = "reported", nullable = false)

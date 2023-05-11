@@ -57,10 +57,6 @@ public class UserController {
         return userRepository.save(userWhoAdds);
     }
 
-
-
-
-
     @PutMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean updateUser(@PathVariable String username, @RequestBody User user) {
