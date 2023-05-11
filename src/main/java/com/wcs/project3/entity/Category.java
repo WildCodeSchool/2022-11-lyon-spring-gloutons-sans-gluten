@@ -2,8 +2,6 @@ package com.wcs.project3.entity;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Category {
     @Id
