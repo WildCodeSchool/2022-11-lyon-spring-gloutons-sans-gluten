@@ -56,6 +56,7 @@ public class RecipeController {
 
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
+
     @GetMapping("/recipes/categories")
     public List<Recipe> getAllFromCategory (@RequestParam(required = true) String categoryName){
         return recipeRepository.findRecipesByCategoryName(categoryName);
