@@ -5,6 +5,7 @@ import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
 import com.wcs.project3.payload.request.CreateRecipeRequest;
 import com.wcs.project3.repository.CategoryRepository;
+import com.wcs.project3.repository.CommentsRepository;
 import com.wcs.project3.repository.RecipeIngredientRepository;
 import com.wcs.project3.repository.RecipeRepository;
 import com.wcs.project3.repository.StepRepository;
@@ -29,6 +30,9 @@ public class RecipeController {
     StepRepository stepRepository;
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
+
+    @Autowired
+    CommentsRepository commentsRepository;
 
     @GetMapping("/recipes")
     public List<Recipe> getAllRecipes(){
@@ -92,6 +96,8 @@ public class RecipeController {
         }
         return recipeToUse;
     }
+
+
 
     @PutMapping("/recipes/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){

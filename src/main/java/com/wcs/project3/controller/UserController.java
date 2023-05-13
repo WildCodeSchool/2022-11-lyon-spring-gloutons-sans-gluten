@@ -32,7 +32,7 @@ public class UserController {
     PasswordEncoder encoder;
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -78,6 +78,7 @@ public class UserController {
         return userRepository.save(userWhoAdds);
     }
 
+
     @PostMapping   ("/{username}/likesRecipes/{recipeId}")
 //    @PreAuthorize("#username == authentication.principal.username")
     public User addLikeRecipe( @PathVariable String username,@PathVariable Long recipeId){
@@ -86,6 +87,7 @@ public class UserController {
         userWhoAdds.getLikeRecipes().add(recipeToAdd);
         return userRepository.save(userWhoAdds);
     }
+
 
     @PutMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
