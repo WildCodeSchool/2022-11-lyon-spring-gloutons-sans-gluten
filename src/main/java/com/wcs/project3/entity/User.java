@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> likeRecipes;
+
 
 
     public User() {
@@ -142,4 +144,5 @@ public class User {
     public void setLikeRecipes(List<Recipe> likeRecipes) {
         this.likeRecipes = likeRecipes;
     }
+
 }
