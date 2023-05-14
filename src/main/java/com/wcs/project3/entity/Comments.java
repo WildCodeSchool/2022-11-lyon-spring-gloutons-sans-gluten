@@ -28,7 +28,7 @@ public class Comments {
     @Column(name = "reported", nullable = false)
     private boolean reported;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonSerialize(using = UserSerializer.class)
     private User user;

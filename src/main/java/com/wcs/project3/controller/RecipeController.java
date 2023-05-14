@@ -1,6 +1,7 @@
 package com.wcs.project3.controller;
 
 import com.wcs.project3.entity.Category;
+import com.wcs.project3.entity.Comments;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
 import com.wcs.project3.payload.request.CreateRecipeRequest;
@@ -40,11 +41,13 @@ public class RecipeController {
         List<Recipe> recipes = recipeRepository.findAll();
         for (Recipe recipe : recipes){
             if (recipe.isValidated()){
+//                List<Comments> comments =commentsRepository.getCommentsByRecipeId(recipe.getId());
+//                recipe.setComments(comments);
                 validatedRecipes.add(recipe);
                 recipe.setNumberOfLikes(recipe.getLikeUsers().size());
             }
         }
-        return validatedRecipes;
+    return validatedRecipes;
     }
 
     @GetMapping("/notValidatedRecipes")
@@ -59,20 +62,20 @@ public class RecipeController {
         return notValidatedRecipes;
     }
 
-    @GetMapping("/recipes/{id}")
-    public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
-
     @GetMapping("/recipes/categories")
-    public List<Recipe> getAllFromCategory (@RequestParam(required = true) String categoryName){
-        List<Recipe> notValidatedRecipesByCategory = new ArrayList<>();
+    public List<Recipe> getAllValidatedRecipesByCategory (@RequestParam(required = true) String categoryName){
+        List<Recipe> validatedRecipesByCategory = new ArrayList<>();
         List<Recipe> recipes= recipeRepository.findRecipesByCategoryName(categoryName);
         for (Recipe recipe : recipes){
             if (recipe.isValidated()){
-                notValidatedRecipesByCategory.add(recipe);
+                validatedRecipesByCategory.add(recipe);
             }
         }
-        return notValidatedRecipesByCategory;
+        return validatedRecipesByCategory;
     }
+
+    @GetMapping("/recipes/{id}")
+    public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
 
     @PostMapping("/recipes")
     public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody CreateRecipeRequest body) {
@@ -101,8 +104,6 @@ public class RecipeController {
         }
         return recipeToUse;
     }
-
-
 
     @PutMapping("/recipes/{id}")
     public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
