@@ -46,6 +46,7 @@ public class RecipeController {
         }
         return validatedRecipes;
     }
+
     @GetMapping("/notValidatedRecipes")
     public List<Recipe> getAllNotValidatedRecipes(){
         List<Recipe> notValidatedRecipes = new ArrayList<>();
@@ -63,15 +64,20 @@ public class RecipeController {
 
     @GetMapping("/recipes/categories")
     public List<Recipe> getAllFromCategory (@RequestParam(required = true) String categoryName){
-        return recipeRepository.findRecipesByCategoryName(categoryName);
+        List<Recipe> notValidatedRecipesByCategory = new ArrayList<>();
+        List<Recipe> recipes= recipeRepository.findRecipesByCategoryName(categoryName);
+        for (Recipe recipe : recipes){
+            if (recipe.isValidated()){
+                notValidatedRecipesByCategory.add(recipe);
+            }
+        }
+        return notValidatedRecipesByCategory;
     }
 
     @PostMapping("/recipes")
     public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody CreateRecipeRequest body) {
-
         Recipe newRecipe = new Recipe();
         Category categoryToUse = categoryRepository.findById(category).get();
-
         newRecipe.setTitle(body.getTitle());
         newRecipe.setImage(body.getImage());
         newRecipe.setPersonNumber(body.getPersonNumber());
@@ -88,7 +94,6 @@ public class RecipeController {
 //            stepsList.add(newStep);
 //        }
         Recipe recipeToUse = recipeRepository.save(newRecipe);
-
         List<RecipeIngredient> ingredientsToUse = body.getIngredients();
         for (int i = 0; i < ingredientsToUse.size(); i++) {
             ingredientsToUse.get(i).setRecipe(recipeToUse);
@@ -135,7 +140,6 @@ public class RecipeController {
         if (recipe.isPresent()){
             numberOfLikes = recipe.get().getLikeUsers().size();
         }
-        System.out.println(recipe.get().getLikeUsers().size());
         return numberOfLikes;
     }
 
