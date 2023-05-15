@@ -2,6 +2,7 @@ package com.wcs.project3.payload.request;
 
 import com.wcs.project3.entity.RecipeIngredient;
 import com.wcs.project3.entity.Step;
+import com.wcs.project3.entity.User;
 
 import java.util.List;
 
@@ -96,4 +97,5 @@ public class CreateRecipeRequest {
     public void setSteps(List<Step> steps) {
         this.steps = steps;
     }
+
 }

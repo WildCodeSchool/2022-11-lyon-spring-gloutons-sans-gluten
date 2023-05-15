@@ -3,12 +3,9 @@ package com.wcs.project3.controller;
 import com.wcs.project3.entity.Category;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.RecipeIngredient;
+import com.wcs.project3.entity.User;
 import com.wcs.project3.payload.request.CreateRecipeRequest;
-import com.wcs.project3.repository.CategoryRepository;
-import com.wcs.project3.repository.CommentsRepository;
-import com.wcs.project3.repository.RecipeIngredientRepository;
-import com.wcs.project3.repository.RecipeRepository;
-import com.wcs.project3.repository.StepRepository;
+import com.wcs.project3.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +28,8 @@ public class RecipeController {
     StepRepository stepRepository;
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
-
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     CommentsRepository commentsRepository;
 
@@ -45,8 +43,9 @@ public class RecipeController {
                 recipe.setNumberOfLikes(recipe.getLikeUsers().size());
             }
         }
-        return validatedRecipes;
+    return validatedRecipes;
     }
+
     @GetMapping("/notValidatedRecipes")
     public List<Recipe> getAllNotValidatedRecipes(){
         List<Recipe> notValidatedRecipes = new ArrayList<>();
@@ -59,19 +58,26 @@ public class RecipeController {
         return notValidatedRecipes;
     }
 
+    @GetMapping("/recipes/categories")
+    public List<Recipe> getAllValidatedRecipesByCategory (@RequestParam(required = true) String categoryName){
+        List<Recipe> validatedRecipesByCategory = new ArrayList<>();
+        List<Recipe> recipes= recipeRepository.findRecipesByCategoryName(categoryName);
+        for (Recipe recipe : recipes){
+            if (recipe.isValidated()){
+                validatedRecipesByCategory.add(recipe);
+            }
+        }
+        return validatedRecipesByCategory;
+    }
+
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
-    @GetMapping("/recipes/categories")
-    public List<Recipe> getAllFromCategory (@RequestParam(required = true) String categoryName){
-        return recipeRepository.findRecipesByCategoryName(categoryName);
-    }
 
     @PostMapping("/recipes")
     public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody CreateRecipeRequest body) {
-
         Recipe newRecipe = new Recipe();
+//        User userToUse = userRepository.findByUsername(username).get();
         Category categoryToUse = categoryRepository.findById(category).get();
-
         newRecipe.setTitle(body.getTitle());
         newRecipe.setImage(body.getImage());
         newRecipe.setPersonNumber(body.getPersonNumber());
@@ -80,15 +86,9 @@ public class RecipeController {
         newRecipe.setTotalTime(body.getTotalTime());
         newRecipe.setValidated(body.getValidated());
         newRecipe.setCategory(categoryToUse);
+//        newRecipe.setUser(userToUse);
         newRecipe.setSteps(body.getSteps());
-//        List<Step> stepsList = new ArrayList<>();
-//
-//        for (int i = 0; i < body.getSteps().size(); i++) {
-//            Step newStep = stepRepository.save(body.getSteps().get(i));
-//            stepsList.add(newStep);
-//        }
         Recipe recipeToUse = recipeRepository.save(newRecipe);
-
         List<RecipeIngredient> ingredientsToUse = body.getIngredients();
         for (int i = 0; i < ingredientsToUse.size(); i++) {
             ingredientsToUse.get(i).setRecipe(recipeToUse);
