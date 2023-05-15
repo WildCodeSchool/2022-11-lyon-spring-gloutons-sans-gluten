@@ -7,13 +7,11 @@ import com.wcs.project3.repository.CommentsRepository;
 import com.wcs.project3.repository.RecipeRepository;
 import com.wcs.project3.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
 import java.util.*;
 
 @CrossOrigin
