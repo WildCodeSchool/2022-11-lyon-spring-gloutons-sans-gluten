@@ -8,6 +8,7 @@ import com.wcs.project3.payload.request.CreateRecipeRequest;
 import com.wcs.project3.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -96,9 +97,12 @@ public class RecipeController {
         return recipeToUse;
     }
 
-    @PutMapping("/recipes/{id}")
-    public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
-        Recipe recipeToUpdate = recipeRepository.findById(id).get();
+    @Transactional
+    @PutMapping("admin/recipes/{recipeId}/categories")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Recipe updateRecipe(@PathVariable Long recipeId,@RequestParam Long category, @RequestBody Recipe recipe){
+        Category categoryToUse = categoryRepository.findById(category).get();
+        Recipe recipeToUpdate = recipeRepository.findById(recipeId).get();
         recipeToUpdate.setTitle(recipe.getTitle());
         recipeToUpdate.setImage(recipe.getImage());
         recipeToUpdate.setPersonNumber(recipe.getPersonNumber());
@@ -106,7 +110,19 @@ public class RecipeController {
         recipeToUpdate.setCookingTime(recipe.getCookingTime());
         recipeToUpdate.setTotalTime(recipe.getTotalTime());
         recipeToUpdate.setValidated(recipe.isValidated());
-        return recipeRepository.save(recipeToUpdate);
+        recipeToUpdate.setCategory(categoryToUse);
+        recipeToUpdate.setSteps(recipe.getSteps());
+
+        Recipe createdRecipe = recipeRepository.save(recipeToUpdate);
+
+        recipeIngredientRepository.deleteRecipeIngredientsByRecipe(recipeToUpdate);
+
+        List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
+        for (int i = 0; i < ingredientsToUse.size(); i++) {
+            ingredientsToUse.get(i).setRecipe(createdRecipe);
+            recipeIngredientRepository.save(ingredientsToUse.get(i));
+        }
+        return createdRecipe;
     }
 
     @Transactional
