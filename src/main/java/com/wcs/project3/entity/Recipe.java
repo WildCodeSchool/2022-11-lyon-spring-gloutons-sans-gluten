@@ -46,7 +46,7 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.REFRESH, orphanRemoval = true)
     private List<RecipeIngredient> ingredients;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = CascadeType.REFRESH, orphanRemoval = true)
     private List<Comments> comments = new ArrayList<>();
 
     public Recipe() { }
