@@ -148,7 +148,6 @@ public class RecipeController {
         if (recipe.isPresent()){
             numberOfLikes = recipe.get().getLikeUsers().size();
         }
-        System.out.println(recipe.get().getLikeUsers().size());
         return numberOfLikes;
     }
 
