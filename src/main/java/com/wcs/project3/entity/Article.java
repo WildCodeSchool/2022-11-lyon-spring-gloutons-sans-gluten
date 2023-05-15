@@ -27,9 +27,11 @@ public class Article {
     @JsonIgnore
     private User user;
 
+
     @ManyToMany(mappedBy = "favoriteArticles", cascade = CascadeType.DETACH)
     @JsonIgnore
     private List<User> favoriteUsers;
+
 
     public Article() {
     }
