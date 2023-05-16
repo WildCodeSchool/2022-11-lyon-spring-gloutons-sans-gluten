@@ -1,7 +1,10 @@
 package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +14,11 @@ public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
+    @Size(max = 50)
     private String title;
+    @NotBlank
+    @Size(max = 100)
     private String image;
     private Long personNumber;
     private Long preparationTime;
@@ -19,7 +26,6 @@ public class Recipe {
     private Long  totalTime;
     private boolean validated;
     @Transient
-    // Précise que numberOfLikes ne doit pas être sauvegardé en base de données
     private int numberOfLikes;
 
     @ManyToMany(mappedBy = "favoriteRecipes", cascade = CascadeType.DETACH)
@@ -36,7 +42,7 @@ public class Recipe {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "user_id")
-    @JsonIgnore
+    @JsonSerialize(using = UserSerializer.class)
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -162,7 +168,6 @@ public class Recipe {
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
     }
-
 
     public List<Comments> getComments() {
         return comments;

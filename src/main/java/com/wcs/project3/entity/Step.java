@@ -1,15 +1,21 @@
 package com.wcs.project3.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Step {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @NotBlank
+    @Size(max = 120)
     private String title;
     private Long stepNumber;
     @Column(columnDefinition = "TEXT")
+    @NotBlank
+    @Size(max = 120)
     private String description;
 
     public Step() { }

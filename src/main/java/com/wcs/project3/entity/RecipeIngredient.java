@@ -2,6 +2,8 @@ package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class RecipeIngredient {
@@ -9,6 +11,8 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+    @NotBlank
+    @Size(max = 30)
     private String quantity;
 
     @ManyToOne(cascade = CascadeType.MERGE)

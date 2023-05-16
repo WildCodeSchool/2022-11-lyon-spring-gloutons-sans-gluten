@@ -74,9 +74,9 @@ public class RecipeController {
     public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
 
     @PostMapping("/recipes")
-    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestBody CreateRecipeRequest body) {
+    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestParam String username, @RequestBody CreateRecipeRequest body) {
         Recipe newRecipe = new Recipe();
-//        User userToUse = userRepository.findByUsername(username).get();
+        User userToUse = userRepository.findByUsername(username).get();
         Category categoryToUse = categoryRepository.findById(category).get();
         newRecipe.setTitle(body.getTitle());
         newRecipe.setImage(body.getImage());
@@ -86,7 +86,7 @@ public class RecipeController {
         newRecipe.setTotalTime(body.getTotalTime());
         newRecipe.setValidated(body.getValidated());
         newRecipe.setCategory(categoryToUse);
-//        newRecipe.setUser(userToUse);
+        newRecipe.setUser(userToUse);
         newRecipe.setSteps(body.getSteps());
         Recipe recipeToUse = recipeRepository.save(newRecipe);
         List<RecipeIngredient> ingredientsToUse = body.getIngredients();
@@ -112,9 +112,7 @@ public class RecipeController {
         recipeToUpdate.setValidated(recipe.isValidated());
         recipeToUpdate.setCategory(categoryToUse);
         recipeToUpdate.setSteps(recipe.getSteps());
-
         Recipe createdRecipe = recipeRepository.save(recipeToUpdate);
-
         recipeIngredientRepository.deleteRecipeIngredientsByRecipe(recipeToUpdate);
 
         List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
