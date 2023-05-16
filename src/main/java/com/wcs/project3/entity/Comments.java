@@ -33,7 +33,7 @@ public class Comments {
     @JsonSerialize(using = UserSerializer.class)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipe_id", nullable = false)
     @JsonIgnore
     private Recipe recipe;

@@ -29,6 +29,16 @@ public class CommentsController {
     @GetMapping("/comments")
     public List<Comments> getAll(){return commentsRepository.findAll();}
 
+    @GetMapping("/comments/{id}")
+    public Comments getCommentsById(@PathVariable Long id){return commentsRepository.findById(id).get();}
+
+        @GetMapping("/recipes/{id}/comments")
+    public List<Comments> getCommentsByRecipeId(@PathVariable Long id) {
+        Recipe recipe = recipeRepository.findById(id).get();
+        List<Comments> comments = recipe.getComments();
+        return comments;
+    }
+
     @PostMapping("/comments")
     public ResponseEntity<?> createComment(@RequestParam Long recipeId, @RequestParam String username, @RequestBody Comments comment) {
         User user = userRepository.findByUsername(username).get();
