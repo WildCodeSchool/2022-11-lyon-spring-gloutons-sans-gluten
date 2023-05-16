@@ -2,6 +2,9 @@ package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 @Entity
@@ -10,7 +13,11 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @NotBlank
+    @Size(max = 30)
     private String name;
+    @NotBlank
+    @Size(max = 255)
     private String logo;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)

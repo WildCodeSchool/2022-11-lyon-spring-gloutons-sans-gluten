@@ -2,6 +2,8 @@ package com.wcs.project3.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +15,11 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
+    @Size(max = 50)
     private String title;
+    @NotBlank
+    @Size(max = 100)
     private  String image;
     @Column(columnDefinition = "TEXT")
     private String content;

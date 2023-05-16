@@ -22,12 +22,10 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     ArticleRepository articleRepository;
     @Autowired
     RecipeRepository recipeRepository;
-
     @Autowired
     PasswordEncoder encoder;
 
@@ -38,25 +36,25 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    //@PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public User getProfile(@PathVariable String username) {
         return userRepository.findByUsername(username).get();
     }
 
     @GetMapping( "/{username}/favorites")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    //@PreAuthorize("#username == authentication.principal.username")
     public List<Article> getFavoriteArticlesByUser(@PathVariable String username){
        userRepository.findByUsername(username).get();
        return articleRepository.findUser_FavoriteArticlesByFavoriteUsersUsername(username);}
 
     @GetMapping( "/{username}/favoritesRecipes")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    //@PreAuthorize("#username == authentication.principal.username")
     public List<Recipe> getFavoriteRecipesByUser(@PathVariable String username){
         userRepository.findByUsername(username).get();
         return recipeRepository.findUser_FavoriteRecipesByFavoriteUsersUsername(username);}
 
     @GetMapping( "/{username}/likesRecipes")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    //@PreAuthorize("#username == authentication.principal.username")
     public List<Recipe> getlikeRecipesByUser(@PathVariable String username){
         userRepository.findByUsername(username).get();
         return recipeRepository.findUser_LikeRecipesByLikeUsersUsername(username);}
@@ -87,7 +85,6 @@ public class UserController {
         userWhoAdds.getLikeRecipes().add(recipeToAdd);
         return userRepository.save(userWhoAdds);
     }
-
 
     @PutMapping("/{username}")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
@@ -123,6 +120,7 @@ public class UserController {
         userRepository.deleteById(userToDelete.getId());
         return true;
     }
+
     @DeleteMapping   ("/{username}/favorites/{articleId}")
     @PreAuthorize("#username == authentication.principal.username")
     public Boolean deleteFavorite( @PathVariable String username,@PathVariable Long articleId){
@@ -132,6 +130,7 @@ public class UserController {
         articleRepository.save(articleToDelete);
         return true;
     }
+
     @DeleteMapping   ("/{username}/favoritesRecipes/{recipeId}")
     @PreAuthorize("#username == authentication.principal.username")
     public Boolean deleteFavoriteRecipe( @PathVariable String username,@PathVariable Long recipeId){
