@@ -32,7 +32,7 @@ public class CommentsController {
     @GetMapping("/comments/{id}")
     public Comments getCommentsById(@PathVariable Long id){return commentsRepository.findById(id).get();}
 
-        @GetMapping("/recipes/{id}/comments")
+    @GetMapping("/recipes/{id}/comments")
     public List<Comments> getCommentsByRecipeId(@PathVariable Long id) {
         Recipe recipe = recipeRepository.findById(id).get();
         List<Comments> comments = recipe.getComments();
