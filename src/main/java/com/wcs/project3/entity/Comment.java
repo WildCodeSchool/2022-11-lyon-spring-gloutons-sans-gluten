@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 @Entity
-public class Comments {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class Comments {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @Column(name = "reported", nullable = false)
+    @Column(name = "reported")
     private boolean reported;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "user_id")
     @JsonSerialize(using = UserSerializer.class)
     private User user;
 
@@ -38,7 +38,7 @@ public class Comments {
     @JsonIgnore
     private Recipe recipe;
 
-    public Comments() {
+    public Comment() {
     }
 
     public Long getId() {

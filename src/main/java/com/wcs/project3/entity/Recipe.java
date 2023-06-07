@@ -36,10 +36,10 @@ public class Recipe {
     @JsonIgnore
     private List<User> likeUsers;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = CascadeType.REFRESH, orphanRemoval = true)
-    private List<Comments> comments = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = CascadeType.DETACH, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name= "user_id")
     @JsonSerialize(using = UserSerializer.class)
     private User user;
@@ -169,11 +169,11 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public List<Comments> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comments> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
