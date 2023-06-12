@@ -4,8 +4,11 @@ import com.wcs.project3.entity.Article;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.User;
 import com.wcs.project3.repository.ArticleRepository;
+import com.wcs.project3.repository.CommentRepository;
 import com.wcs.project3.repository.RecipeRepository;
 import com.wcs.project3.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,10 +30,14 @@ public class UserController {
     @Autowired
     RecipeRepository recipeRepository;
     @Autowired
+    CommentRepository commentRepository;
+    @Autowired
     PasswordEncoder encoder;
+    @Autowired
+    private EntityManager entityManager;
 
     @GetMapping("")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -97,7 +104,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/password")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> body) {
         // Mettre à jour le mot de passe dans la base de données
         User user = userRepository.findById(userId).orElse(null);
@@ -113,12 +120,16 @@ public class UserController {
         return null;
     }
 
+    @Transactional
     @DeleteMapping("/{username}")
-    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+//    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
     public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();
-        userRepository.deleteById(userToDelete.getId());
-        return true;
+        if (userToDelete != null) {
+            userRepository.delete(userToDelete);
+            return true;
+        }
+        return false;
     }
 
     @DeleteMapping   ("/{username}/favorites/{articleId}")

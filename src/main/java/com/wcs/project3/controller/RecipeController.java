@@ -31,7 +31,7 @@ public class RecipeController {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    CommentsRepository commentsRepository;
+    CommentRepository commentRepository;
 
     @GetMapping("/recipes")
     public List<Recipe> getAllRecipes(){
@@ -43,7 +43,7 @@ public class RecipeController {
                 recipe.setNumberOfLikes(recipe.getLikeUsers().size());
             }
         }
-    return validatedRecipes;
+        return validatedRecipes;
     }
 
     @GetMapping("/notValidatedRecipes")
@@ -71,10 +71,15 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes/{id}")
-    public Recipe getRecipe(@PathVariable Long id){return recipeRepository.findById(id).get();}
+    public Recipe getRecipe(@PathVariable Long id){
+
+        return recipeRepository.findById(id).get();
+    }
 
     @PostMapping("/recipes")
-    public Recipe createRecipe(@RequestParam(required = true) Long category, @RequestParam String username, @RequestBody CreateRecipeRequest body) {
+    @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
+    public Recipe createRecipe(@RequestParam(required = true) Long category,
+                               @RequestParam String username, @RequestBody CreateRecipeRequest body) {
         Recipe newRecipe = new Recipe();
         User userToUse = userRepository.findByUsername(username).get();
         Category categoryToUse = categoryRepository.findById(category).get();
@@ -114,7 +119,6 @@ public class RecipeController {
         recipeToUpdate.setSteps(recipe.getSteps());
         Recipe createdRecipe = recipeRepository.save(recipeToUpdate);
         recipeIngredientRepository.deleteRecipeIngredientsByRecipe(recipeToUpdate);
-
         List<RecipeIngredient> ingredientsToUse = recipe.getIngredients();
         for (int i = 0; i < ingredientsToUse.size(); i++) {
             ingredientsToUse.get(i).setRecipe(createdRecipe);

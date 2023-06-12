@@ -1,5 +1,6 @@
 package com.wcs.project3.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,16 +21,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotBlank
     @Size(max = 20)
     private String username;
-
     @NotBlank
     @Size(max = 50)
     @Email
     private String email;
-
     @NotBlank
     @Size(max = 120)
     private String password;
@@ -44,22 +42,29 @@ public class User {
     private List<Article> articles;
 
     @ManyToMany
+    @JsonSerialize(using = FavoriteArticleSerializer.class)
     @JoinTable(name= "favorite_articles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id"))
     private List<Article> favoriteArticles;
 
     @ManyToMany
+    @JsonSerialize(using = FavoriteRecipeSerializer.class)
     @JoinTable(name= "favorite_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> favoriteRecipes;
 
     @ManyToMany
+    @JsonSerialize(using = LikeRecipeSerializer.class)
     @JoinTable(name= "Like_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> likeRecipes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonSerialize(using = CommentSerializer.class)
+    private List<Comment> comments;
 
     public User() {
     }
@@ -142,4 +147,11 @@ public class User {
         this.likeRecipes = likeRecipes;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

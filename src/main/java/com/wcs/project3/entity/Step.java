@@ -15,7 +15,6 @@ public class Step {
     private Long stepNumber;
     @Column(columnDefinition = "TEXT")
     @NotBlank
-    @Size(max = 120)
     private String description;
 
     public Step() { }
