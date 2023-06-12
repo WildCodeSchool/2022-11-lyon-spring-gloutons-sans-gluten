@@ -99,15 +99,5 @@ public class CommentController {
         }
         return true;
     }
-//    @Transactional
-//    @DeleteMapping("comments/{commentId}")
-//    public Boolean deleteComment(@PathVariable Long commentId){
-//        Comment comment = commentRepository.findById(commentId).orElse(null);
-//
-//        User user = comment.getUser();
-//        user.getComments().remove(comment);
-//
-//        commentRepository.deleteById(commentId);
-//        return true;
-//    }
+
 }

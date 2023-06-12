@@ -1,7 +1,6 @@
 package com.wcs.project3.controller;
 
 import com.wcs.project3.entity.Article;
-import com.wcs.project3.entity.Comment;
 import com.wcs.project3.entity.Recipe;
 import com.wcs.project3.entity.User;
 import com.wcs.project3.repository.ArticleRepository;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-//import javax.xml.stream.events.Comment;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +104,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/password")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> body) {
         // Mettre à jour le mot de passe dans la base de données
         User user = userRepository.findById(userId).orElse(null);
@@ -128,13 +126,6 @@ public class UserController {
     public boolean deleteUser(@PathVariable String username) {
         User userToDelete = userRepository.findByUsername(username).get();
         if (userToDelete != null) {
-            // Récupérer les commentaires de l'utilisateur
-//            List<Comment> comments = commentRepository.findByUser(userToDelete);
-
-            // Supprimer les commentaires
-//            commentRepository.deleteByUser(userToDelete);
-
-            // Supprimer l'utilisateur
             userRepository.delete(userToDelete);
             return true;
         }

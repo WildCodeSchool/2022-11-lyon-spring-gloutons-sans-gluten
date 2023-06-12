@@ -28,7 +28,7 @@ public class Comment {
     @Column(name = "reported")
     private boolean reported;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     @JsonSerialize(using = UserSerializer.class)
     private User user;

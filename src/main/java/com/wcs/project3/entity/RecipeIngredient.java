@@ -11,6 +11,7 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+
     @NotBlank
     @Size(max = 30)
     private String quantity;

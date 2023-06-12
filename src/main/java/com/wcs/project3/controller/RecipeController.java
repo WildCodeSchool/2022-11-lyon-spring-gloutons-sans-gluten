@@ -73,7 +73,8 @@ public class RecipeController {
     @GetMapping("/recipes/{id}")
     public Recipe getRecipe(@PathVariable Long id){
 
-        return recipeRepository.findById(id).get();}
+        return recipeRepository.findById(id).get();
+    }
 
     @PostMapping("/recipes")
     @PreAuthorize("#username == authentication.principal.username or hasRole('ADMIN')")
